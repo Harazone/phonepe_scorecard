@@ -2,7 +2,7 @@ package scorecard;
 
 public class ScoreCard {
 	
-	public static void displayScore(Innings inngs) {
+	public static void displayScore(BattingInnings inngs) {
 		ScoreBoardDisplay.displayMessage("Player Name", "Score","4s", "6s","Balls");
 		for(Player p : inngs.getTeam().getPlayers()) {
 			String astrik=(p.getStatus().equals(PlayerStatus.PLAYING))?"*":"" ;			

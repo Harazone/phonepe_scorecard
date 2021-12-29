@@ -11,20 +11,20 @@ import java.util.List;
  *
  */
 public class Match {
-	List<Innings> innings;
+	List<BattingInnings> battingInnings;
 	Integer overLimit;
 	Integer totalTeamPlayers;
 
 	public Match(Integer overLimit, Integer totalTeamPlayers, String[] team1, String[] team2) {
-		innings = new ArrayList<>();
-		innings.add(new Innings(team1));
-		innings.add(new Innings(team2));
+		battingInnings = new ArrayList<>();
+		battingInnings.add(new BattingInnings(team1));
+		battingInnings.add(new BattingInnings(team2));
 		this.overLimit = overLimit;
 		this.totalTeamPlayers = totalTeamPlayers;
 	}
 
-	public Innings getCurrentInnings() {
-		for (Innings i : innings) {
+	public BattingInnings getCurrentInnings() {
+		for (BattingInnings i : battingInnings) {
 			if (i.getStatus().equals(InningsStatus.INPROGRESS)) {
 				return i;
 			}
@@ -33,8 +33,8 @@ public class Match {
 		return null;
 	}
 
-	public Innings getNextInnings() {
-		for (Innings i : innings) {
+	public BattingInnings getNextInnings() {
+		for (BattingInnings i : battingInnings) {
 			if (i.getStatus().equals(InningsStatus.PENDING)) {
 				i.setStatus(InningsStatus.INPROGRESS);
 				i.initializePlayer();
@@ -46,7 +46,7 @@ public class Match {
 	}
 
 	public boolean validateInnings() {
-		Innings inngs = getCurrentInnings();
+		BattingInnings inngs = getCurrentInnings();
 		if (inngs == null) {
 			inngs = getNextInnings();
 			if (inngs == null) {
@@ -54,13 +54,20 @@ public class Match {
 			}
 		}
 		if (ifMatchIsWon()) {
+			if(!inngs.isOverEnded()) {
+				ScoreCard.displayScore(inngs);
+			}
 			return false;
 		}
-		if (inngs.getPlayedOvers() <= overLimit && inngs.getWickets() < totalTeamPlayers - 1) {
+		if (inngs.getPlayedOvers() < overLimit && inngs.getWickets() < totalTeamPlayers - 1) {
+
 			return true;
 		} else {
+			if(inngs.getWickets() == totalTeamPlayers - 1) {
+				ScoreCard.displayScore(inngs);
+			}
 			inngs.setStatus(InningsStatus.COMPLETED);
-			Innings nextInngs = getNextInnings();
+			BattingInnings nextInngs = getNextInnings();
 			if (nextInngs != null) {
 				return true;
 			}
@@ -70,10 +77,10 @@ public class Match {
 	}
 
 	public boolean ifMatchIsWon() {
-		Innings ings = getCurrentInnings();
+		BattingInnings ings = getCurrentInnings();
 		boolean firstInngsCompleted = false;
 		Integer scoreOfFirstInngs = 0;
-		for (Innings innings : this.innings) {
+		for (BattingInnings innings : this.battingInnings) {
 			if (innings.getStatus().equals(InningsStatus.COMPLETED)) {
 				firstInngsCompleted = true;
 				scoreOfFirstInngs = innings.getScore();
@@ -89,22 +96,22 @@ public class Match {
 	}
 
 	public void displayMatchResults() {
-		if (innings.get(0).getScore() > innings.get(1).getScore()) {
+		if (battingInnings.get(0).getScore() > battingInnings.get(1).getScore()) {
 			ScoreBoardDisplay.displayMessage(
-					"Team 1 won the match by " + (innings.get(0).getScore() - innings.get(1).getScore()) + " runs");
-		} else if (innings.get(0).getScore() == innings.get(1).getScore()) {
+					"Team 1 won the match by " + (battingInnings.get(0).getScore() - battingInnings.get(1).getScore()) + " runs");
+		} else if (battingInnings.get(0).getScore() == battingInnings.get(1).getScore()) {
 			ScoreBoardDisplay.displayMessage("Match is drawn");
 		} else {
 			ScoreBoardDisplay.displayMessage(
-					"Team 2 won the match by " + (innings.get(1).getScore() - innings.get(0).getScore()) + " runs");
+					"Team 2 won the match by " + (battingInnings.get(1).getScore() - battingInnings.get(0).getScore()) + " runs");
 		}
 	}
 
-	public List<Innings> getInnings() {
-		return innings;
+	public List<BattingInnings> getBattingInnings() {
+		return battingInnings;
 	}
 
-	public void setInnings(List<Innings> innings) {
-		this.innings = innings;
+	public void setBattingInnings(List<BattingInnings> innings) {
+		this.battingInnings = innings;
 	}
 }

@@ -6,13 +6,13 @@ import java.util.List;
 public class Player {
 	private String name;
 	private PlayerStatus status;
-	private List<Ball> balls;
+	private List<Ball> playedBalls;
 	private Integer score;
 	
 	public Player(String name) {
 		this.name=name;
 		this.status=PlayerStatus.WAITING_TO_PLAY;
-		this.balls = new LinkedList<>();
+		this.playedBalls = new LinkedList<>();
 		this.score=0;
 	}
 	public String getName() {
@@ -28,13 +28,13 @@ public class Player {
 		this.status = status;
 	}
 	public List<Ball> getBalls() {
-		return balls;
+		return playedBalls;
 	}
 	public void updateBall(Ball b) {
 		if(b.getType().equals(BallType.WICKET_BALL)) {
 			this.status=PlayerStatus.OUT;
 		}
-		balls.add(b);
+		playedBalls.add(b);
 		this.score=this.score+b.getScore();
 	}
 	public Integer getScore() {
@@ -46,7 +46,7 @@ public class Player {
 	
 	public Integer getFours() {
 		Integer fourCount=0;
-		for(Ball b: balls) {
+		for(Ball b: playedBalls) {
 			if(b.getScore()==4) {
 				fourCount++;
 			}
@@ -56,7 +56,7 @@ public class Player {
 	}
 	public Integer getSixes() {
 		Integer sixCount=0;
-		for(Ball b: balls) {
+		for(Ball b: playedBalls) {
 			if(b.getScore()==6) {
 				sixCount++;
 			}

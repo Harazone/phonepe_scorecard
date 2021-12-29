@@ -18,7 +18,7 @@ public class ScoreBoardDisplay {
 		System.out.println();
 	}
 	public static void displayMessage(String playerName,String score,String fours,String sixes,String balls) {
-		System.out.format("%32s%10s%10s%10s", playerName, score, fours,sixes,balls);
+		System.out.format("%32s%10s%10s%10s%10s", playerName, score, fours,sixes,balls);
 		System.out.println();
 	}
 }
